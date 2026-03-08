@@ -2,16 +2,34 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
+import requests
+import base64
+
+# --- CONFIGURACIÓN ---
+# PEGA AQUÍ TU API KEY DE IMGBB
+IMGBB_API_KEY = "TU_API_KEY_DE_IMGBB_AQUI"
 
 st.set_page_config(page_title="WiFi Express", page_icon="📶")
 
 # Conectar con Google Sheets
 conn = st.connection("gsheets", type=GSheetsConnection)
 
+def subir_imagen(archivo):
+    """Sube la imagen a ImgBB y devuelve la URL"""
+    url = "https://api.imgbb.com/1/upload"
+    payload = {
+        "key": IMGBB_API_KEY,
+        "image": base64.b64encode(archivo.read()).decode('utf-8'),
+    }
+    res = requests.post(url, payload)
+    if res.status_code == 200:
+        return res.json()['data']['url']
+    return "Error al subir foto"
+
 st.title("📶 Conéctate Ahora")
 st.subheader("Obtén tu clave de WiFi por 30 días")
 
-with st.form("formulario_pago"):
+with st.form("formulario_pago", clear_on_submit=True):
     nombre = st.text_input("Nombre y Apellido")
     whatsapp = st.text_input("Número de WhatsApp")
     edificio = st.selectbox("Edificio", ["Edificio Norte", "Torre Sur", "Departamentos Centro"])
@@ -23,43 +41,54 @@ if boton_enviar:
     if not nombre or not whatsapp or not foto:
         st.error("❌ Por favor, rellena todos los campos y sube el comprobante.")
     else:
-        with st.spinner("Procesando..."):
+        with st.spinner("Procesando pago y asignando voucher..."):
             try:
-                # 1. Leer la pestaña de Vouchers
-                vouchers_df = conn.read(worksheet="Vouchers")
+                # 1. Leer Vouchers (ttl=0 obliga a leer datos frescos del Excel)
+                vouchers_df = conn.read(worksheet="Vouchers", ttl=0)
                 
-                # Filtrar los que dicen "Disponible" (ignorando mayúsculas/minúsculas)
-                disponibles = vouchers_df[vouchers_df['Estado'].str.lower() == 'disponible']
+                # Filtrar disponibles
+                disponibles = vouchers_df[vouchers_df['Estado'].astype(str).str.lower() == 'disponible']
                 
                 if disponibles.empty:
-                    st.error("Lo sentimos, no hay vouchers disponibles en este momento. Contacta a soporte.")
+                    st.error("Lo sentimos, no hay vouchers disponibles. Contacta a soporte.")
                 else:
-                    # 2. Tomar el primer voucher disponible
+                    # 2. Tomar el primer voucher y limpiar el .0
                     indice_voucher = disponibles.index[0]
-                    voucher_entregado = disponibles.at[indice_voucher, 'Codigo']
+                    voucher_sucio = disponibles.at[indice_voucher, 'Codigo']
+                    voucher_entregado = str(voucher_sucio).split('.')[0] # Quita el .0 si existe
                     
-                    # 3. Cambiar el estado a "Vendido"
+                    # 3. Subir foto a la nube
+                    url_foto = subir_imagen(foto)
+                    
+                    # 4. Actualizar estado en la pestaña Vouchers
                     vouchers_df.at[indice_voucher, 'Estado'] = 'Vendido'
                     conn.update(worksheet="Vouchers", data=vouchers_df)
                     
-                    # 4. Registrar la venta en la pestaña "Registros"
-                    registros_df = conn.read(worksheet="Registros")
+                    # 5. Registrar venta en pestaña Registros (Leyendo datos frescos)
+                    registros_df = conn.read(worksheet="Registros", ttl=0)
                     nuevo_registro = pd.DataFrame([{
                         "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         "Nombre": nombre,
                         "WhatsApp": whatsapp,
                         "Edificio": edificio,
                         "Voucher_Asignado": voucher_entregado,
-                        "Nota": "Revisar comprobante"
+                        "Comprobante_URL": url_foto,
+                        "Nota": "Pendiente de validar"
                     }])
+                    
+                    # Concatenar y actualizar
                     registros_actualizados = pd.concat([registros_df, nuevo_registro], ignore_index=True)
                     conn.update(worksheet="Registros", data=registros_actualizados)
                     
-                    # 5. Mostrar el éxito
-                    st.success("✅ ¡Pago registrado!")
-                    st.markdown("### 🔑 TU CLAVE DE ACCESO:")
-                    st.info(f"**{voucher_entregado}**")
-                    st.caption("Importante: Valideramos tu captura en breve. Si el pago no procede, el voucher será desactivado.")
+                    # 6. ÉXITO
+                    st.balloons()
+                    st.success("✅ ¡Pago registrado con éxito!")
+                    st.markdown(f"""
+                    ### 🔑 TU CLAVE DE ACCESO:
+                    ## **{voucher_entregado}**
+                    ---
+                    """)
+                    st.info("Guarda tu clave. Si el pago no es validado, el acceso será revocado.")
                     
             except Exception as e:
-                st.error("Hubo un error al conectar con la base de datos. Intenta de nuevo.")
+                st.error(f"Error crítico: {e}")
