@@ -7,7 +7,7 @@ import base64
 
 # --- CONFIGURACIÓN ---
 # PEGA AQUÍ TU API KEY DE IMGBB
-IMGBB_API_KEY = "TU_API_KEY_DE_IMGBB_AQUI"
+IMGBB_API_KEY = "fbed3041e8525daf0adb14c7414b5335"
 
 st.set_page_config(page_title="WiFi Express", page_icon="📶")
 
