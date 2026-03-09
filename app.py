@@ -15,7 +15,7 @@ st.markdown(
     <style>
     .stApp {
         background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                          url("https://raw.githubusercontent.com/l-r-o-m/Portal-WiFi-Omada/refs/heads/main/wifi.jpg");
+                          url("https://raw.githubusercontent.com/l-r-o-m/Portal-WiFi-Omada/refs/heads/main/daniel-joshua-4rn8TAfLB4I-unsplash.jpg");
         background-size: cover;
         background-attachment: fixed;
     }
