@@ -9,6 +9,24 @@ import pytz
 IMGBB_API_KEY = "fbed3041e8525daf0adb14c7414b5335"
 
 st.set_page_config(page_title="WiFi Express", page_icon="📶")
+# --- ESTILO PERSONALIZADO ---
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                          url("https://unsplash.com/es/fotos/un-portatil-y-un-teclado-conectados-a-una-nube-tA0x6_sLawk");
+        background-size: cover;
+        background-attachment: fixed;
+    }
+    /* Estilo para que el texto se lea bien sobre el fondo */
+    h1, h2, h3, p, span {
+        color: white !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Conectar con Google Sheets
 conn = st.connection("gsheets", type=GSheetsConnection)
