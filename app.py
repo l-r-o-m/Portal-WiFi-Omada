@@ -67,7 +67,7 @@ if boton_enviar:
                     tz = pytz.timezone('America/Monterrey')
                     registros_df = conn.read(worksheet="Registros", ttl=0)
                     nuevo_registro = pd.DataFrame([{
-                        "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "Fecha": datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S"),
                         "Nombre": nombre,
                         "WhatsApp": whatsapp,
                         "Edificio": edificio,
