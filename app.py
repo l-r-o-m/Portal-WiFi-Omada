@@ -45,7 +45,7 @@ with st.form("formulario_pago", clear_on_submit=True):
     nombre = st.text_input("Nombre y Apellido")
     whatsapp = st.text_input("Número de WhatsApp")
     edificio = st.selectbox("Edificio", ["Edificio Norte", "Torre Sur", "Departamentos Centro"])
-    foto = st.file_uploader("Sube captura de tu transferencia", type=['jpg', 'jpeg', 'png'])
+    foto = st.file_uploader("Sube captura de tu transferencia o foto de comprobante de deposito", type=['jpg', 'jpeg', 'png'])
     
     boton_enviar = st.form_submit_button("VALIDAR Y OBTENER CLAVE")
 
