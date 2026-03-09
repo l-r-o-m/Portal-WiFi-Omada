@@ -18,10 +18,6 @@ st.markdown(
         background-size: cover;
         background-attachment: fixed;
     }
-    /* Estilo para que el texto se lea bien sobre el fondo */
-    h1, h2, h3, p, span {
-        color: white !important;
-    }
     </style>
     """,
     unsafe_allow_html=True
