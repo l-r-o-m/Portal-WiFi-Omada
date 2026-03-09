@@ -15,7 +15,7 @@ st.markdown(
     <style>
     .stApp {
         background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                          url("https://unsplash.com/es/fotos/un-portatil-y-un-teclado-conectados-a-una-nube-tA0x6_sLawk");
+                          url("https://raw.githubusercontent.com/l-r-o-m/Portal-WiFi-Omada/refs/heads/main/wifi.jpg");
         background-size: cover;
         background-attachment: fixed;
     }
