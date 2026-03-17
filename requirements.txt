@@ -3,3 +3,7 @@ st-gsheets-connection
 pandas
 requests
 pytz
+streamlit-gsheets
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
