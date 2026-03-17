@@ -132,7 +132,7 @@ st.markdown(
         Cada clave de acceso tiene un costo de $90 MXN, está limitada a un solo dispositivo y cuenta con una vigencia exacta de 30 días (con expiración automática).
         <br><br>
         <strong>⚠️ Aviso Importante:</strong><br>
-        Cualquier intento de fraude o falsificación de comprobantes de pago constituye un delito federal. Estas acciones resultarán en el bloqueo permanente del dispositivo implicado en nuestra red WiFi y se tomarán las medidas legales correspondientes.
+        Cualquier intento de fraude o falsificación de comprobantes de pago constituye un delito federal. Estas acciones resultarán en el bloqueo permanente del dispositivo implicado en nuestra red WiFi.
     </div>
     """,
     unsafe_allow_html=True
