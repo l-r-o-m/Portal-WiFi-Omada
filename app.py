@@ -4,11 +4,12 @@ import pandas as pd
 from datetime import datetime
 import requests
 import base64
-import pytz  
+import pytz
 
 IMGBB_API_KEY = "fbed3041e8525daf0adb14c7414b5335"
 
 st.set_page_config(page_title="WiFi Express", page_icon="📶")
+
 # --- ESTILO PERSONALIZADO ---
 st.markdown(
     """
@@ -17,6 +18,15 @@ st.markdown(
         background-image: url("https://raw.githubusercontent.com/l-r-o-m/Portal-WiFi-Omada/refs/heads/main/daniel-joshua-4rn8TAfLB4I-unsplash.jpg");
         background-size: cover;
         background-attachment: fixed;
+    }
+    .aviso-legal {
+        background-color: rgba(0, 0, 0, 0.6);
+        padding: 15px;
+        border-left: 5px solid #ff4b4b;
+        border-radius: 5px;
+        margin-top: 50px;
+        font-size: 14px;
+        color: #f0f2f6;
     }
     </style>
     """,
@@ -38,17 +48,25 @@ def subir_imagen(archivo):
         return res.json()['data']['url']
     return "Error al subir foto"
 
+# --- ENCABEZADO Y MENSAJE DE BIENVENIDA ---
 st.title("📶 Conéctate Ahora")
-st.subheader("Obtén tu clave de WiFi por 30 días")
 
+st.markdown("""
+### ¡Bienvenido!
+Obtén acceso a la red WiFi ingresando los datos solicitados a continuación y adjuntando tu comprobante de pago por la cantidad de **$90 MXN**.
+""")
+st.write("---")
+
+# --- FORMULARIO ---
 with st.form("formulario_pago", clear_on_submit=True):
     nombre = st.text_input("Nombre y Apellido")
     whatsapp = st.text_input("Número de WhatsApp")
     edificio = st.selectbox("Edificio", ["Edificio Norte", "Torre Sur", "Departamentos Centro"])
-    foto = st.file_uploader("Sube captura de tu transferencia o foto de comprobante de deposito", type=['jpg', 'jpeg', 'png'])
+    foto = st.file_uploader("Sube captura de tu transferencia o foto de comprobante de depósito", type=['jpg', 'jpeg', 'png'])
     
     boton_enviar = st.form_submit_button("VALIDAR Y OBTENER CLAVE")
 
+# --- LÓGICA DE PROCESAMIENTO ---
 if boton_enviar:
     if not nombre or not whatsapp or not foto:
         st.error("❌ Por favor, rellena todos los campos y sube el comprobante.")
@@ -95,13 +113,27 @@ if boton_enviar:
                     
                     # 6. ÉXITO
                     st.balloons()
-                    st.success("✅ ¡Pago registrado con éxito!")
+                    st.success("✅ ¡Registro completado con éxito!")
                     st.markdown(f"""
                     ### 🔑 TU CLAVE DE ACCESO:
                     ## **{voucher_entregado}**
                     ---
                     """)
-                    st.info("Guarda tu clave. Si el pago no es validado, el acceso será revocado.")
+                    st.info("Guarda tu clave. Tu comprobante pasará a revisión; si el pago no es validado, el acceso será revocado automáticamente.")
                     
             except Exception as e:
                 st.error(f"Error crítico: {e}")
+
+# --- TÉRMINOS Y CONDICIONES (Parte Inferior) ---
+st.markdown(
+    """
+    <div class="aviso-legal">
+        <strong>Términos y Condiciones del Servicio:</strong><br>
+        Cada clave de acceso tiene un costo de $90 MXN, está limitada a un solo dispositivo y cuenta con una vigencia exacta de 30 días (con expiración automática).
+        <br><br>
+        <strong>⚠️ Aviso Importante:</strong><br>
+        Cualquier intento de fraude o falsificación de comprobantes de pago constituye un delito federal. Estas acciones resultarán en el bloqueo permanente del dispositivo implicado en nuestra red WiFi y se tomarán las medidas legales correspondientes.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
