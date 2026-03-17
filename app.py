@@ -13,7 +13,7 @@ st.set_page_config(page_title="WiFi Express", page_icon="📶")
 
 # --- CONFIGURACIÓN DE GOOGLE DRIVE ---
 # Reemplaza esto con el ID de la carpeta que creaste en tu Drive
-DRIVE_FOLDER_ID = "TU_ID_DE_CARPETA_AQUI" 
+DRIVE_FOLDER_ID = "1hrKPWTZVvC-LZy2DmwEaxLaAwU30MtOb" 
 
 # --- ESTILO PERSONALIZADO ---
 st.markdown(
