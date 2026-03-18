@@ -97,6 +97,8 @@ st.title("📶 Conéctate Ahora")
 st.markdown("""
 ### ¡Bienvenido!
 Obtén acceso a la red WiFi ingresando los datos solicitados a continuación y adjuntando tu comprobante de pago por la cantidad de **$90 MXN**.
+Disponibilidad de momento unicamente para edificio Los Reyes segundo piso, Casa Aldama ambos pisos.
+Proximamente se instalara el WiFi para todos los pisos en Los Reyes.
 """)
 st.write("---")
 
